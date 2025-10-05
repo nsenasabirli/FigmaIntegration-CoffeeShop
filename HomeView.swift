@@ -31,7 +31,7 @@ struct HomeView: View {
                         // Promo banner
                         promoBanner
                         
-                        // Categories
+                        // White content surface (categories + grid)
                         VStack(alignment: .leading, spacing: 24) {
                             // Categories
                             categoryChips
@@ -40,8 +40,10 @@ struct HomeView: View {
                             productGrid
                         }
                         .padding(.horizontal, 30)
-                        .padding(.vertical, 24)
-                        .background(Color.white, in: RoundedRectangle(cornerRadius: 24))
+                        .padding(.top, 20)
+                        .padding(.bottom, 28)
+                        .background(Color.white)
+                        .cornerRadius(24, corners: [.topLeft, .topRight])
                         .padding(.horizontal, -30)
                     }
                     .padding(.horizontal, 30)
@@ -136,11 +138,20 @@ struct HomeView: View {
                         .padding(.vertical, 5)
                         .background(Color(red: 0.93, green: 0.26, blue: 0.26), in: RoundedRectangle(cornerRadius: 8))
                     
-                    Text("Buy one get\none FREE")
-                        .font(.system(size: 32, weight: .bold))
-                        .foregroundColor(.white)
-                        .lineSpacing(-4)
-                        .lineLimit(2)
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Buy one get")
+                            .font(.system(size: 28, weight: .bold))
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 2)
+                            .background(Color.black.opacity(0.65), in: RoundedRectangle(cornerRadius: 6))
+                        Text("one FREE")
+                            .font(.system(size: 28, weight: .bold))
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 2)
+                            .background(Color.black.opacity(0.65), in: RoundedRectangle(cornerRadius: 6))
+                    }
                 }
                 .padding(.leading, 20)
                 
@@ -166,11 +177,11 @@ struct HomeView: View {
                     Button(action: { selectedCategoryIndex = index }) {
                         Text(title)
                             .font(.system(size: 14, weight: .semibold))
-                            .foregroundColor(isSelected ? .white : Color(red: 0.6, green: 0.6, blue: 0.6))
+                            .foregroundColor(isSelected ? .white : Color(red: 0.55, green: 0.40, blue: 0.32))
                             .padding(.vertical, 10)
                             .padding(.horizontal, 16)
                             .background(
-                                isSelected ? Color(red: 0.76, green: 0.48, blue: 0.34) : Color.white,
+                                isSelected ? Color(red: 0.76, green: 0.48, blue: 0.34) : Color.clear,
                                 in: RoundedRectangle(cornerRadius: 12)
                             )
                     }
@@ -194,19 +205,20 @@ struct HomeView: View {
     
     private var bottomTabBar: some View {
         HStack(spacing: 0) {
-            Spacer()
             TabBarItem(icon: "house.fill", isSelected: true)
-            Spacer()
             TabBarItem(icon: "heart", isSelected: false)
-            Spacer()
             TabBarItem(icon: "bag", isSelected: false)
-            Spacer()
             TabBarItem(icon: "bell", isSelected: false)
-            Spacer()
         }
-        .frame(height: 70)
-        .background(Color.white)
-        .shadow(color: Color.black.opacity(0.05), radius: 20, x: 0, y: -5)
+        .frame(height: 64)
+        .padding(.horizontal, 24)
+        .padding(.bottom, 10)
+        .background(
+            RoundedRectangle(cornerRadius: 32)
+                .fill(Color.white)
+                .shadow(color: Color.black.opacity(0.06), radius: 20, x: 0, y: 6)
+        )
+        .padding(.horizontal, 16)
     }
 }
 
@@ -240,7 +252,7 @@ struct ProductCardView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             // Image section
-            ZStack(alignment: .topLeading) {
+            ZStack(alignment: .topTrailing) {
                 RoundedRectangle(cornerRadius: 16)
                     .fill(
                         LinearGradient(
@@ -261,19 +273,19 @@ struct ProductCardView: View {
                             .padding(28)
                     )
                 
-                // Rating badge
+                // Rating badge (top-right)
                 HStack(spacing: 4) {
                     Image(systemName: "star.fill")
                         .font(.system(size: 10))
-                        .foregroundColor(.orange)
+                        .foregroundColor(Color(red: 0.98, green: 0.77, blue: 0.22))
                     Text(String(format: "%.1f", product.rating))
                         .font(.system(size: 10, weight: .semibold))
                         .foregroundColor(.black)
                 }
-                .padding(.horizontal, 10)
-                .padding(.vertical, 5)
-                .background(Color.black.opacity(0.06), in: RoundedRectangle(cornerRadius: 10))
-                .padding(10)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 4)
+                .background(Color.white.opacity(0.8), in: RoundedRectangle(cornerRadius: 10))
+                .padding(8)
             }
             
             // Product info
@@ -309,6 +321,7 @@ struct ProductCardView: View {
             .padding(12)
         }
         .background(Color.white, in: RoundedRectangle(cornerRadius: 16))
+        .shadow(color: Color.black.opacity(0.04), radius: 12, x: 0, y: 6)
     }
 }
 

@@ -19,7 +19,7 @@ struct ContentView: View {
                 VStack(spacing: 0) {
                     ZStack(alignment: .bottom) {
                         onboardingImage
-                            .frame(height: 550)
+                            .frame(height: 620)
                             .clipped()
                         LinearGradient(
                             gradient: Gradient(colors: [
@@ -30,7 +30,7 @@ struct ContentView: View {
                             endPoint: .bottom
                         )
                         .allowsHitTesting(false)
-                        .frame(height: 550)
+                        .frame(height: 620)
                     }
                     .ignoresSafeArea(edges: .top)
                     
@@ -45,7 +45,7 @@ struct ContentView: View {
                             .font(.system(size: 32, weight: .semibold))
                             .foregroundColor(.white)
                             .multilineTextAlignment(.center)
-                            .lineSpacing(4)
+                            .lineSpacing(6)
                         
                         Text("Welcome to our cozy coffee corner, where\nevery cup is a delightful for you.")
                             .font(.system(size: 14, weight: .regular))

@@ -2,12 +2,6 @@
 //  HomeView.swift
 //  CoffeeShop
 //
-//  Created by N Sena Sabırlı on 5.10.2025.
-//
-//
-//  HomeView.swift
-//  CoffeeShop
-//
 
 import SwiftUI
 
@@ -18,50 +12,41 @@ struct HomeView: View {
     private let categories: [String] = ["All Coffee", "Machiato", "Latte", "Americano"]
 
     var body: some View {
-        ZStack(alignment: .bottom) {
-            NavigationStack {
-                ScrollView {
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 24) {
+                    // Header
+                    headerview
+                    
+                    // Search
+                    searchbar
+                    
+                    // Promo banner
+                    promoBanner
+                    
+                    // White content surface (categories + grid)
                     VStack(alignment: .leading, spacing: 24) {
-                        // Header
-                        headerview
+                        // Categories
+                        categoryChips
                         
-                        // Search
-                        searchbar
-                        
-                        // Promo banner
-                        promoBanner
-                        
-                        // White content surface (categories + grid)
-                        VStack(alignment: .leading, spacing: 24) {
-                            // Categories
-                            categoryChips
-                            
-                            // Product grid
-                            productGrid
-                        }
-                        .padding(.horizontal, 30)
-                        .padding(.top, 20)
-                        .padding(.bottom, 28)
-                        .background(Color.white)
-                        .cornerRadius(24, corners: [.topLeft, .topRight])
-                        .padding(.horizontal, -30)
+                        // Product grid
+                        productGrid
                     }
                     .padding(.horizontal, 30)
-                    .padding(.top, 48)
-                    .padding(.bottom, 120)
+                    .padding(.top, 20)
+                    .padding(.bottom, 28)
+                    .background(Color.white)
+                    .cornerRadius(24, corners: [.topLeft, .topRight])
+                    .padding(.horizontal, -30)
                 }
-                .background(Color(red: 0.13, green: 0.13, blue: 0.13).ignoresSafeArea())
+                .padding(.horizontal, 30)
+                .padding(.top, 48)
+                .padding(.bottom, 100) // Space for floating tab bar
             }
+            .background(Color(red: 0.13, green: 0.13, blue: 0.13).ignoresSafeArea())
             .navigationDestination(for: Product.self) { product in
                 ProductDetailView(product: product)
             }
-            
-            // Bottom Tab Bar
-            VStack {
-                Spacer()
-                bottomTabBar
-            }
-            .ignoresSafeArea(edges: .bottom)
         }
     }
 
@@ -118,7 +103,6 @@ struct HomeView: View {
 
     private var promoBanner: some View {
         ZStack {
-            // Background with gradient
             LinearGradient(
                 gradient: Gradient(colors: [
                     Color(red: 0.55, green: 0.40, blue: 0.32),
@@ -157,7 +141,6 @@ struct HomeView: View {
                 
                 Spacer()
                 
-                // Coffee image
                 Image(systemName: "cup.and.saucer.fill")
                     .resizable()
                     .scaledToFit()
@@ -174,7 +157,11 @@ struct HomeView: View {
             HStack(spacing: 8) {
                 ForEach(Array(categories.enumerated()), id: \.offset) { index, title in
                     let isSelected = index == selectedCategoryIndex
-                    Button(action: { selectedCategoryIndex = index }) {
+                    Button(action: {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            selectedCategoryIndex = index
+                        }
+                    }) {
                         Text(title)
                             .font(.system(size: 14, weight: .semibold))
                             .foregroundColor(isSelected ? .white : Color(red: 0.55, green: 0.40, blue: 0.32))
@@ -201,48 +188,6 @@ struct HomeView: View {
                 }
             }
         }
-    }
-    
-    private var bottomTabBar: some View {
-        HStack(spacing: 0) {
-            TabBarItem(icon: "house.fill", isSelected: true)
-            TabBarItem(icon: "heart", isSelected: false)
-            TabBarItem(icon: "bag", isSelected: false)
-            TabBarItem(icon: "bell", isSelected: false)
-        }
-        .frame(height: 64)
-        .padding(.horizontal, 24)
-        .padding(.bottom, 10)
-        .background(
-            RoundedRectangle(cornerRadius: 32)
-                .fill(Color.white)
-                .shadow(color: Color.black.opacity(0.06), radius: 20, x: 0, y: 6)
-        )
-        .padding(.horizontal, 16)
-    }
-}
-
-struct TabBarItem: View {
-    let icon: String
-    let isSelected: Bool
-    
-    var body: some View {
-        VStack(spacing: 6) {
-            Image(systemName: icon)
-                .font(.system(size: 22, weight: isSelected ? .semibold : .regular))
-                .foregroundColor(isSelected ? Color(red: 0.76, green: 0.48, blue: 0.34) : Color(red: 0.7, green: 0.7, blue: 0.7))
-            
-            if isSelected {
-                Circle()
-                    .fill(Color(red: 0.76, green: 0.48, blue: 0.34))
-                    .frame(width: 6, height: 6)
-            } else {
-                Circle()
-                    .fill(Color.clear)
-                    .frame(width: 6, height: 6)
-            }
-        }
-        .frame(maxWidth: .infinity)
     }
 }
 
@@ -273,7 +218,7 @@ struct ProductCardView: View {
                             .padding(28)
                     )
                 
-                // Rating badge (top-right)
+                // Rating badge
                 HStack(spacing: 4) {
                     Image(systemName: "star.fill")
                         .font(.system(size: 10))
@@ -308,7 +253,11 @@ struct ProductCardView: View {
                     
                     Spacer()
                     
-                    Button(action: {}) {
+                    Button(action: {
+                        // Add haptic feedback
+                        let impact = UIImpactFeedbackGenerator(style: .light)
+                        impact.impactOccurred()
+                    }) {
                         Image(systemName: "plus")
                             .font(.system(size: 14, weight: .bold))
                             .foregroundColor(.white)
@@ -325,7 +274,7 @@ struct ProductCardView: View {
     }
 }
 
-// Helper extension for placeholder
+// Helper extensions
 extension View {
     func placeholder<Content: View>(
         when shouldShow: Bool,
@@ -336,10 +285,7 @@ extension View {
             self
         }
     }
-}
-
-// Custom corner radius
-extension View {
+    
     func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
         clipShape(RoundedCorner(radius: radius, corners: corners))
     }
